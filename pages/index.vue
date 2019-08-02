@@ -1,15 +1,25 @@
 <template>
   <div class="container">
     <!-- 幻灯片 -->
-    <!-- 省略代码 -->
-    <!--省略代码-->
-    <div
-      class="banner-image"
-      :style="`
+    <el-carousel :interval="5000" arrow="always">
+      <el-carousel-item v-for="(item, index) in banners" :key="index">
+        <div
+          class="banner-image"
+          :style="`
+                background:url(${item.url}) center center no-repeat;
+                background-size:contain contain;
+                `"
+        ></div>
+        <div
+          class="banner-image"
+          :style="`
              background:url(${$axios.defaults.baseURL}${item.url}) center center no-repeat;
              background-size:contain contain;
              `"
-    ></div>
+        ></div>
+      </el-carousel-item>
+    </el-carousel>
+    <!-- 搜索框 -->
     <div class="banner-content">
       <div class="search-bar">
         <!-- tab栏 -->
@@ -42,7 +52,21 @@
 export default {
   data() {
     return {
-      banners: [], // 轮播图数据
+      // 轮播图数据
+      banners: [
+        {
+          url: "http://157.122.54.189:9095/assets/images/th01.jfif"
+        },
+        {
+          url: "http://157.122.54.189:9095/assets/images/th02.jfif"
+        },
+        {
+          url: "http://157.122.54.189:9095/assets/images/th03.jfif"
+        },
+        {
+          url: "http://157.122.54.189:9095/assets/images/th04.jfif"
+        }
+      ],
       options: [
         // 搜索框tab选项
         {
@@ -67,16 +91,29 @@ export default {
   },
   mounted() {
     this.$axios({
-      url: "/scenics/banners" 
+      url: "/scenics/banners"
     }).then(res => {
       const { data } = res.data;
       this.banners = data;
     });
   },
-
   methods: {
-    handleOption(index) {},
-    handleSearch() {}
+    handleOption(index) {
+        // 设置当前tab
+        this.currentOption = index;
+
+        // 如果当前的机票tab，那么直接跳转到机票首页
+        const item = this.options[index];
+        if(item.name === "机票"){
+          return this.$router.push(itme.pageUrl);
+        }
+    },
+        // 搜索时候触发
+    handleSearch(){
+        const item = this.options[this.currentOption];
+        // 跳转时候给对应的页面url加上搜索内容参数
+        this.$router.push(item.pageUrl + this.searchValue);
+    } 
   }
 };
 </script>
