@@ -16,24 +16,33 @@
                     @click="handleChangeTab(index)">
                         {{item}}
                     </span>
+
+
                 </el-row>
 
                 <!-- 登录功能组件 -->
-                <!-- <LoginForm v-if="currentTab == 0"/> -->
+                <LoginForm v-if="currentTab == 0"/>
 
                 <!-- 注册功能组件 -->
-                <!-- <RegisterForm v-if="currentTab == 1"/> -->
+                <RegisterForm v-if="currentTab == 1"/>
             </div>
         </el-row>
     </div>
 </template>
 
 <script>
+import LoginForm from "@/components/user/loginForm"
+import RegisterForm from "@/components/user/registerForm"
+
 export default {
     data(){
         return {
-            currentTab: 0
+            currentTab: 1
         }
+    },
+    components: {
+        LoginForm,
+        RegisterForm
     },
     methods: {
         handleChangeTab(index){
