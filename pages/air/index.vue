@@ -7,10 +7,9 @@
     <!-- 搜索广告栏 -->
     <el-row type="flex" justify="space-between">
         <!-- 搜索表单 -->
-        <div>搜索</div>
-
+        <SearchForm/>
         <!-- banner广告 -->
-        <div class="sale-banner">
+         <div class="sale-banner">
             <img src="http://157.122.54.189:9093/images/pic_sale.jpeg">
         </div>
     </el-row>
@@ -36,7 +35,7 @@
       <i>特价机票</i>
     </h2>
 
-   <!-- 特价机票 -->
+    <!-- 特价机票 -->
     <div class="air-sale">
         <el-row type="flex" class="air-sale-pic" justify="space-between">
             <el-col :span="6" v-for="(item, index) in sales" :key="index">
@@ -55,8 +54,9 @@
 
 <script>
 import SearchForm from "@/components/air/searchForm";
+
 export default {
-    data(){
+  data(){
         return {
             sales: [{
                 cover: "https://gss0.bdstatic.com/94o3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D220/sign=9154c841bcfd5266a32b3b169b199799/3812b31bb051f8199687c7e0d0b44aed2f73e7fe.jpg",
@@ -76,7 +76,9 @@ export default {
             this.sales = res.data.data;
         });
     },
-
+    components: {
+        SearchForm
+    },
 }
 </script>
 

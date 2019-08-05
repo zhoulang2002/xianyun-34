@@ -22,7 +22,6 @@
           placeholder="请搜索出发城市"
           @select="handleDepartSelect"
           class="el-autocomplete"
-          v-model="form.departCity"
         ></el-autocomplete>
       </el-form-item>
       <el-form-item label="到达城市">
@@ -48,6 +47,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   data() {
     return {
@@ -59,17 +59,6 @@ export default {
     };
   },
   methods: {
-    // tab切换时触发
-    handleSearchTab(item, index) {
-      if (index === 1) {
-        this.$confirm("目前暂不支持往返，请使用单程选票！", "提示", {
-          confirmButtonText: "确定",
-          showCancelButton: false,
-          type: "warning"
-        });
-      }
-    },
-
     // 出发城市输入框获得焦点时触发
     // value 是选中的值，cb是回调函数，接收要展示的列表
     async queryDepartSearch(value, cb) {
@@ -122,19 +111,25 @@ export default {
         });
       });
     },
+
+    // 出发城市下拉选择时触发
     // item代表当前选中项
     handleDepartSelect(item) {
       this.form.departCity = item.value;
       this.form.departCode = item.sort;
     },
 
+    // 目标城市下拉选择时触发
+    // item代表当前选中项
+    handleDestSelect(item) {
+      this.form.destCity = item.value;
+      this.form.destCode = item.sort;
+    },
+
     // 确认选择日期时触发
     handleDate(value) {
       this.form.departDate = moment(value).format("YYYY-MM-DD");
     },
-
-    // 确认选择日期时触发
-    handleDate(value) {},
 
     // 触发和目标城市切换时触发
     handleReverse() {
@@ -145,7 +140,6 @@ export default {
       this.form.destCity = departCity;
       this.form.destCode = departCode;
     },
-
     // 提交表单是触发
     handleSubmit() {
       // 表单验证数据
@@ -163,6 +157,15 @@ export default {
           message: "请选择出发时间"
         }
       };
+      // 添加到本地存储
+      const airs = JSON.parse(localStorage.getItem("airs") || `[]`);
+      airs.push(this.form);
+      localStorage.setItem("airs", JSON.stringify(airs));
+
+      this.$router.push({
+        path: "/air/flights",
+        query: this.form
+      });
 
       let valid = true; // 表单验证结果
 
@@ -182,7 +185,6 @@ export default {
           });
         }
       });
-
       // 不通过验证，不需要往下执行
       if (!valid) return;
 
@@ -192,8 +194,8 @@ export default {
       });
     }
   }
+  // mounted() {}
 };
-</script>
 </script>
 
 <style scoped lang="less">
